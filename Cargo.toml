@@ -1,0 +1,15 @@
+[package]
+authors      = ["Murilo Ijanc' <mbsd@m0x.ru>"]
+description  = "A study of language"
+edition      = "2021"
+homepage     = "https://m0x.ru"
+license      = "MIT"
+name         = "anlang"
+repository   = "https://git.sr.ht/~mbsd/anos"
+rust-version = "1.78"
+version      = "0.1.0"
+
+[lints.clippy]
+all        = { level = "warn" }
+
+[dependencies]
