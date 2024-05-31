@@ -14,7 +14,31 @@
 
 use std::fmt;
 
-pub(crate) enum Token {
+pub(crate) struct Token {
+    tp: TokenType,
+    // literal: &'a str
+}
+
+impl Token {
+    // pub fn new(tp: TokenType, literal: &'a str) -> Self {
+    //     Self {tp, literal}
+    // }
+
+    pub fn new(tp: TokenType) -> Self {
+        Self { tp }
+    }
+
+    pub fn tp(&self) -> &TokenType {
+        &self.tp
+    }
+
+    pub fn literal(&self) -> &str {
+        self.tp.as_str()
+    }
+}
+
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub(crate) enum TokenType {
     Illegal,
     Eof,
 
@@ -39,32 +63,32 @@ pub(crate) enum Token {
     Let,
 }
 
-impl Token {
+impl TokenType {
     pub(crate) fn as_str(&self) -> &str {
         match self {
-            Token::Illegal => "Illegal",
-            Token::Eof => "Eof",
-            Token::Ident => "Ident",
-            Token::Int => "Int",
-            Token::Assign => "=",
-            Token::Plus => "+",
-            Token::Comma => ",",
-            Token::Semicolon => ";",
-            Token::Lparen => "(",
-            Token::Rparen => ")",
-            Token::Lbrace => "{",
-            Token::Rbrace => "}",
-            Token::Function => "Function",
-            Token::Let => "Let",
+            TokenType::Illegal => "Illegal",
+            TokenType::Eof => "",
+            TokenType::Ident => "Ident",
+            TokenType::Int => "Int",
+            TokenType::Assign => "=",
+            TokenType::Plus => "+",
+            TokenType::Comma => ",",
+            TokenType::Semicolon => ";",
+            TokenType::Lparen => "(",
+            TokenType::Rparen => ")",
+            TokenType::Lbrace => "{",
+            TokenType::Rbrace => "}",
+            TokenType::Function => "Function",
+            TokenType::Let => "Let",
         }
     }
 }
 
-impl fmt::Display for Token {
+impl fmt::Display for TokenType {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Illegal => write!(f, "Illegal"),
-            Self::Eof => write!(f, "Eof"),
+            Self::Eof => write!(f, ""),
             Self::Ident => write!(f, "Ident"),
             Self::Int => write!(f, "Int"),
             Self::Assign => write!(f, "="),
