@@ -13,22 +13,22 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-use std::io::{prelude::*, BufReader, BufWriter, Read, Write};
+use std::io::{self, prelude::*, BufReader, BufWriter, Read, Write};
 
 mod lexer;
 mod token;
 
 const PROMPT: &[u8] = b"[anlang]>> ";
 
-pub fn start<R: Read, W: Write>(r: R, w: W) {
+pub fn start<R: Read, W: Write>(r: R, w: W) -> io::Result<()> {
     let mut reader = BufReader::new(r);
     let mut writer = BufWriter::new(w);
     let mut line = String::new();
 
     loop {
-        writer.write_all(PROMPT).unwrap();
-        writer.flush().unwrap();
-        let _ = reader.read_line(&mut line).unwrap();
+        writer.write_all(PROMPT)?;
+        writer.flush()?;
+        let _ = reader.read_line(&mut line)?;
         line.clear();
     }
 }

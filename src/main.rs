@@ -12,10 +12,9 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-use std::io::{stdin, stdout};
+use std::io::{self, stdin, stdout};
 
-use anlang::start;
-
-fn main() {
-    start(stdin(), stdout());
+fn main() -> io::Result<()> {
+    anlang::start(stdin(), stdout())?;
+    Ok(())
 }
