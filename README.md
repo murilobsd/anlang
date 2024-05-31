@@ -1,12 +1,8 @@
 # AnLang
 
+![logo](assets/logo.png "logo")
+
 > The name of the project is based on the prefix of my wife personal name. [WIP]
-
-## Build
-
-```console
-make build
-```
 
 ## License
 
