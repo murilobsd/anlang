@@ -15,8 +15,8 @@
 
 use std::io::{prelude::*, BufReader, BufWriter, Read, Write};
 
-mod token;
 mod lexer;
+mod token;
 
 const PROMPT: &[u8] = b"[anlang]>> ";
 

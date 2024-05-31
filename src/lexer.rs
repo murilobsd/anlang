@@ -12,7 +12,7 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-pub(crate) struct Token{}
+pub(crate) struct Token {}
 
 #[cfg(test)]
 mod tests {
@@ -22,15 +22,13 @@ mod tests {
         // Expected token
         exp_t: Token,
         // Expected literal
-        exp_l: &'a str
+        exp_l: &'a str,
     }
 
     #[test]
     fn next_token() {
         let _input = "=+(){},;";
-        let _tests = vec![
-            TestNextToken{exp_t: Token::Assign, exp_l: "="},
-        ];
+        let _tests = vec![TestNextToken { exp_t: Token::Assign, exp_l: "=" }];
 
         assert!(true);
     }
