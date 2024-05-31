@@ -16,13 +16,16 @@ use std::io::{Cursor, Read};
 
 use crate::token::{Token, TokenType};
 
+#[derive(Debug)]
 pub(crate) struct Lexer<'a> {
+    /// Source code input
     input: Cursor<&'a [u8]>,
+    /// Current char under examination
     ch: Option<char>,
 }
 
 impl<'a> Lexer<'a> {
-    // Return the next token
+    /// Return the next token
     pub fn next_token(&mut self) -> Token {
         let token = match self.ch {
             Some('(') => Token::new(TokenType::Lparen),
