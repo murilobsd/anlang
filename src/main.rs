@@ -12,6 +12,10 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
+use std::io::{stdin, stdout};
+
+use anlang::start;
+
 fn main() {
-    println!("Hello, world!");
+    start(stdin(), stdout());
 }
