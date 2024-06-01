@@ -37,14 +37,14 @@ impl Token {
     }
 }
 
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) enum TokenType {
-    Illegal,
+    Illegal(String),
     Eof,
 
     // Identifiers + literal
-    Ident, // add, foobar, x, y, ...
-    Int,   // 123456
+    Ident(String), // add, foobar, x, y, ...
+    Int(String),   // 123456
 
     // Operators
     Assign,
@@ -66,10 +66,10 @@ pub(crate) enum TokenType {
 impl TokenType {
     pub(crate) fn as_str(&self) -> &str {
         match self {
-            TokenType::Illegal => "Illegal",
+            TokenType::Illegal(s) => s.as_str(),
             TokenType::Eof => "",
-            TokenType::Ident => "Ident",
-            TokenType::Int => "Int",
+            TokenType::Ident(s) => s.as_str(),
+            TokenType::Int(s) => s.as_str(),
             TokenType::Assign => "=",
             TokenType::Plus => "+",
             TokenType::Comma => ",",
@@ -78,8 +78,8 @@ impl TokenType {
             TokenType::Rparen => ")",
             TokenType::Lbrace => "{",
             TokenType::Rbrace => "}",
-            TokenType::Function => "Function",
-            TokenType::Let => "Let",
+            TokenType::Function => "fn",
+            TokenType::Let => "let",
         }
     }
 }
@@ -87,10 +87,10 @@ impl TokenType {
 impl fmt::Display for TokenType {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Self::Illegal => write!(f, "Illegal"),
+            Self::Illegal(s) => write!(f, "illegal({s})"),
             Self::Eof => write!(f, ""),
-            Self::Ident => write!(f, "Ident"),
-            Self::Int => write!(f, "Int"),
+            Self::Ident(s) => write!(f, "ident({s})"),
+            Self::Int(s) => write!(f, "int({s})"),
             Self::Assign => write!(f, "="),
             Self::Plus => write!(f, "+"),
             Self::Comma => write!(f, ","),
@@ -99,8 +99,8 @@ impl fmt::Display for TokenType {
             Self::Rparen => write!(f, ")"),
             Self::Lbrace => write!(f, "{{"),
             Self::Rbrace => write!(f, "}}"),
-            Self::Function => write!(f, "Function"),
-            Self::Let => write!(f, "Let"),
+            Self::Function => write!(f, "fn"),
+            Self::Let => write!(f, "let"),
         }
     }
 }
