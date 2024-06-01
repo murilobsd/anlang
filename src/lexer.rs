@@ -51,6 +51,12 @@ impl<'a> Lexer<'a> {
             Some('=') => Token::new(TokenType::Assign),
             Some('{') => Token::new(TokenType::Lbrace),
             Some('}') => Token::new(TokenType::Rbrace),
+            Some('-') => Token::new(TokenType::Minus),
+            Some('!') => Token::new(TokenType::Bang),
+            Some('*') => Token::new(TokenType::Asterisk),
+            Some('/') => Token::new(TokenType::Slash),
+            Some('<') => Token::new(TokenType::Lt),
+            Some('>') => Token::new(TokenType::Gt),
             None => Token::new(TokenType::Eof),
             Some(ch) => {
                 if ch.is_alphabetic() {
@@ -138,6 +144,8 @@ mod tests {
         };
 
         let result = add(five, ten);
+        !-/*5;
+        5 < 10 > 5;
         "#;
         let tests = vec![
             TestNextToken { exp_t: TokenType::Let, exp_l: "let" },
@@ -196,6 +204,18 @@ mod tests {
                 exp_l: "ten",
             },
             TestNextToken { exp_t: TokenType::Rparen, exp_l: ")" },
+            TestNextToken { exp_t: TokenType::Semicolon, exp_l: ";" },
+            TestNextToken { exp_t: TokenType::Bang, exp_l: "!" },
+            TestNextToken { exp_t: TokenType::Minus, exp_l: "-" },
+            TestNextToken { exp_t: TokenType::Slash, exp_l: "/" },
+            TestNextToken { exp_t: TokenType::Asterisk, exp_l: "*" },
+            TestNextToken { exp_t: TokenType::Int("5".into()), exp_l: "5" },
+            TestNextToken { exp_t: TokenType::Semicolon, exp_l: ";" },
+            TestNextToken { exp_t: TokenType::Int("5".into()), exp_l: "5" },
+            TestNextToken { exp_t: TokenType::Lt, exp_l: "<" },
+            TestNextToken { exp_t: TokenType::Int("10".into()), exp_l: "10" },
+            TestNextToken { exp_t: TokenType::Gt, exp_l: ">" },
+            TestNextToken { exp_t: TokenType::Int("5".into()), exp_l: "5" },
             TestNextToken { exp_t: TokenType::Semicolon, exp_l: ";" },
             TestNextToken { exp_t: TokenType::Eof, exp_l: "" },
         ];
