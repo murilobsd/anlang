@@ -67,6 +67,11 @@ pub(crate) enum TokenType {
     // Keywords
     Function,
     Let,
+    True,
+    False,
+    If,
+    Else,
+    Return,
 }
 
 impl TokenType {
@@ -92,6 +97,11 @@ impl TokenType {
             TokenType::Rbrace => "}",
             TokenType::Function => "fn",
             TokenType::Let => "let",
+            TokenType::True => "true",
+            TokenType::False => "false",
+            TokenType::If => "if",
+            TokenType::Else => "else",
+            TokenType::Return => "return",
         }
     }
 }
@@ -119,6 +129,11 @@ impl fmt::Display for TokenType {
             Self::Rbrace => write!(f, "}}"),
             Self::Function => write!(f, "fn"),
             Self::Let => write!(f, "let"),
+            Self::True => write!(f, "true"),
+            Self::False => write!(f, "false"),
+            Self::If => write!(f, "if"),
+            Self::Else => write!(f, "else"),
+            Self::Return => write!(f, "return"),
         }
     }
 }

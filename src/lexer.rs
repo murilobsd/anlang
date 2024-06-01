@@ -117,6 +117,11 @@ impl<'a> Lexer<'a> {
         match ident.as_str() {
             "let" => Token::new(TokenType::Let),
             "fn" => Token::new(TokenType::Function),
+            "true" => Token::new(TokenType::True),
+            "false" => Token::new(TokenType::False),
+            "if" => Token::new(TokenType::If),
+            "else" => Token::new(TokenType::Else),
+            "return" => Token::new(TokenType::Return),
             _ => Token::new(TokenType::Ident(ident)),
         }
     }
@@ -146,6 +151,12 @@ mod tests {
         let result = add(five, ten);
         !-/*5;
         5 < 10 > 5;
+
+        if (5 < 10) {
+            return true;
+        } else {
+            return false;
+        }
         "#;
         let tests = vec![
             TestNextToken { exp_t: TokenType::Let, exp_l: "let" },
@@ -205,6 +216,7 @@ mod tests {
             },
             TestNextToken { exp_t: TokenType::Rparen, exp_l: ")" },
             TestNextToken { exp_t: TokenType::Semicolon, exp_l: ";" },
+            // operators
             TestNextToken { exp_t: TokenType::Bang, exp_l: "!" },
             TestNextToken { exp_t: TokenType::Minus, exp_l: "-" },
             TestNextToken { exp_t: TokenType::Slash, exp_l: "/" },
@@ -217,6 +229,25 @@ mod tests {
             TestNextToken { exp_t: TokenType::Gt, exp_l: ">" },
             TestNextToken { exp_t: TokenType::Int("5".into()), exp_l: "5" },
             TestNextToken { exp_t: TokenType::Semicolon, exp_l: ";" },
+            // if ...
+            TestNextToken { exp_t: TokenType::If, exp_l: "if" },
+            TestNextToken { exp_t: TokenType::Lparen, exp_l: "(" },
+            TestNextToken { exp_t: TokenType::Int("5".into()), exp_l: "5" },
+            TestNextToken { exp_t: TokenType::Lt, exp_l: "<" },
+            TestNextToken { exp_t: TokenType::Int("10".into()), exp_l: "10" },
+            TestNextToken { exp_t: TokenType::Rparen, exp_l: ")" },
+            TestNextToken { exp_t: TokenType::Lbrace, exp_l: "{" },
+            TestNextToken { exp_t: TokenType::Return, exp_l: "return" },
+            TestNextToken { exp_t: TokenType::True, exp_l: "true" },
+            TestNextToken { exp_t: TokenType::Semicolon, exp_l: ";" },
+            TestNextToken { exp_t: TokenType::Rbrace, exp_l: "}" },
+            TestNextToken { exp_t: TokenType::Else, exp_l: "else" },
+            TestNextToken { exp_t: TokenType::Lbrace, exp_l: "{" },
+            TestNextToken { exp_t: TokenType::Return, exp_l: "return" },
+            TestNextToken { exp_t: TokenType::False, exp_l: "false" },
+            TestNextToken { exp_t: TokenType::Semicolon, exp_l: ";" },
+            TestNextToken { exp_t: TokenType::Rbrace, exp_l: "}" },
+            // eof
             TestNextToken { exp_t: TokenType::Eof, exp_l: "" },
         ];
 
