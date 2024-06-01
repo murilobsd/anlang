@@ -18,7 +18,10 @@ use std::io::{self, prelude::*, BufReader, BufWriter, Read, Write};
 mod lexer;
 mod token;
 
-const PROMPT: &[u8] = b"[anlang]>> ";
+use lexer::Lexer;
+use token::TokenType;
+
+const PROMPT: &[u8] = b">> ";
 
 pub fn start<R: Read, W: Write>(r: R, w: W) -> io::Result<()> {
     let mut reader = BufReader::new(r);
@@ -28,7 +31,19 @@ pub fn start<R: Read, W: Write>(r: R, w: W) -> io::Result<()> {
     loop {
         writer.write_all(PROMPT)?;
         writer.flush()?;
-        let _ = reader.read_line(&mut line)?;
+        let n = reader.read_line(&mut line)?;
+        if n > 0 {
+            let mut lex = Lexer::new(&line);
+            loop {
+                let token = lex.next_token();
+                if token.tp() != &TokenType::Eof {
+                    write!(writer, "{:?}\n", token)?;
+                } else {
+                    break;
+                }
+            }
+            writer.flush()?;
+        }
         line.clear();
     }
 }

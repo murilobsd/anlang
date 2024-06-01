@@ -14,6 +14,7 @@
 
 use std::fmt;
 
+#[derive(Debug)]
 pub(crate) struct Token {
     tp: TokenType,
     // literal: &'a str
