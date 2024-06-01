@@ -72,6 +72,8 @@ pub(crate) enum TokenType {
     If,
     Else,
     Return,
+    Eq,
+    NotEq,
 }
 
 impl TokenType {
@@ -102,6 +104,8 @@ impl TokenType {
             TokenType::If => "if",
             TokenType::Else => "else",
             TokenType::Return => "return",
+            TokenType::Eq => "==",
+            TokenType::NotEq => "!=",
         }
     }
 }
@@ -134,6 +138,8 @@ impl fmt::Display for TokenType {
             Self::If => write!(f, "if"),
             Self::Else => write!(f, "else"),
             Self::Return => write!(f, "return"),
+            Self::Eq => write!(f, "=="),
+            Self::NotEq => write!(f, "!="),
         }
     }
 }

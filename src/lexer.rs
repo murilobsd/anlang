@@ -48,11 +48,33 @@ impl<'a> Lexer<'a> {
             Some('+') => Token::new(TokenType::Plus),
             Some(',') => Token::new(TokenType::Comma),
             Some(';') => Token::new(TokenType::Semicolon),
-            Some('=') => Token::new(TokenType::Assign),
+            Some('=') => {
+                if let Some(ch) = self.peek_char() {
+                    if ch == '=' {
+                        self.read_char();
+                        Token::new(TokenType::Eq)
+                    } else {
+                        Token::new(TokenType::Assign)
+                    }
+                } else {
+                    Token::new(TokenType::Assign)
+                }
+            }
             Some('{') => Token::new(TokenType::Lbrace),
             Some('}') => Token::new(TokenType::Rbrace),
             Some('-') => Token::new(TokenType::Minus),
-            Some('!') => Token::new(TokenType::Bang),
+            Some('!') => {
+                if let Some(ch) = self.peek_char() {
+                    if ch == '=' {
+                        self.read_char();
+                        Token::new(TokenType::NotEq)
+                    } else {
+                        Token::new(TokenType::Bang)
+                    }
+                } else {
+                    Token::new(TokenType::Bang)
+                }
+            }
             Some('*') => Token::new(TokenType::Asterisk),
             Some('/') => Token::new(TokenType::Slash),
             Some('<') => Token::new(TokenType::Lt),
@@ -73,6 +95,18 @@ impl<'a> Lexer<'a> {
 
         self.read_char();
         token
+    }
+
+    fn peek_char(&mut self) -> Option<char> {
+        let current_position = self.input.position();
+        let mut buffer = [0; 1];
+        let n = self.input.read(&mut buffer).unwrap_or(0);
+        self.input.set_position(current_position);
+        if n == 0 {
+            None
+        } else {
+            Some(buffer[0] as char)
+        }
     }
 
     /// Create a new lexer with the given input
@@ -157,6 +191,9 @@ mod tests {
         } else {
             return false;
         }
+
+        10 == 10;
+        10 != 5;
         "#;
         let tests = vec![
             TestNextToken { exp_t: TokenType::Let, exp_l: "let" },
@@ -247,6 +284,15 @@ mod tests {
             TestNextToken { exp_t: TokenType::False, exp_l: "false" },
             TestNextToken { exp_t: TokenType::Semicolon, exp_l: ";" },
             TestNextToken { exp_t: TokenType::Rbrace, exp_l: "}" },
+            // statements
+            TestNextToken { exp_t: TokenType::Int("10".into()), exp_l: "10" },
+            TestNextToken { exp_t: TokenType::Eq, exp_l: "==" },
+            TestNextToken { exp_t: TokenType::Int("10".into()), exp_l: "10" },
+            TestNextToken { exp_t: TokenType::Semicolon, exp_l: ";" },
+            TestNextToken { exp_t: TokenType::Int("10".into()), exp_l: "10" },
+            TestNextToken { exp_t: TokenType::NotEq, exp_l: "!=" },
+            TestNextToken { exp_t: TokenType::Int("5".into()), exp_l: "5" },
+            TestNextToken { exp_t: TokenType::Semicolon, exp_l: ";" },
             // eof
             TestNextToken { exp_t: TokenType::Eof, exp_l: "" },
         ];
