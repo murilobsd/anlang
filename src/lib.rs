@@ -15,11 +15,12 @@
 
 use std::io::{self, prelude::*, BufReader, BufWriter, Read, Write};
 
+mod ast;
 mod lexer;
 mod token;
 
 use lexer::Lexer;
-use token::TokenType;
+use token::EOF;
 
 const PROMPT: &[u8] = b">> ";
 
@@ -27,6 +28,8 @@ pub fn start<R: Read, W: Write>(r: R, w: W) -> io::Result<()> {
     let mut reader = BufReader::new(r);
     let mut writer = BufWriter::new(w);
     let mut line = String::new();
+
+    writer.write_all(b"Welcome to An v0.1.0\n")?;
 
     loop {
         writer.write_all(PROMPT)?;
@@ -36,8 +39,8 @@ pub fn start<R: Read, W: Write>(r: R, w: W) -> io::Result<()> {
             let mut lex = Lexer::new(&line);
             loop {
                 let token = lex.next_token();
-                if token.tp() != &TokenType::Eof {
-                    write!(writer, "{:?}\n", token)?;
+                if token != EOF {
+                    writeln!(writer, "{:?}", token)?;
                 } else {
                     break;
                 }

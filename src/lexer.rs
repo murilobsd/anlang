@@ -14,7 +14,7 @@
 
 use std::io::{Cursor, Read};
 
-use crate::token::{Token, TokenType};
+use crate::token::Token;
 
 #[derive(Debug)]
 pub(crate) struct Lexer<'a> {
@@ -43,52 +43,52 @@ impl<'a> Lexer<'a> {
         self.skip_whitespace();
 
         let token = match self.ch {
-            Some('(') => Token::new(TokenType::Lparen),
-            Some(')') => Token::new(TokenType::Rparen),
-            Some('+') => Token::new(TokenType::Plus),
-            Some(',') => Token::new(TokenType::Comma),
-            Some(';') => Token::new(TokenType::Semicolon),
+            Some('(') => Token::Lparen,
+            Some(')') => Token::Rparen,
+            Some('+') => Token::Plus,
+            Some(',') => Token::Comma,
+            Some(';') => Token::Semicolon,
             Some('=') => {
                 if let Some(ch) = self.peek_char() {
                     if ch == '=' {
                         self.read_char();
-                        Token::new(TokenType::Eq)
+                        Token::Eq
                     } else {
-                        Token::new(TokenType::Assign)
+                        Token::Assign
                     }
                 } else {
-                    Token::new(TokenType::Assign)
+                    Token::Assign
                 }
             }
-            Some('{') => Token::new(TokenType::Lbrace),
-            Some('}') => Token::new(TokenType::Rbrace),
-            Some('-') => Token::new(TokenType::Minus),
+            Some('{') => Token::Lbrace,
+            Some('}') => Token::Rbrace,
+            Some('-') => Token::Minus,
             Some('!') => {
                 if let Some(ch) = self.peek_char() {
                     if ch == '=' {
                         self.read_char();
-                        Token::new(TokenType::NotEq)
+                        Token::NotEq
                     } else {
-                        Token::new(TokenType::Bang)
+                        Token::Bang
                     }
                 } else {
-                    Token::new(TokenType::Bang)
+                    Token::Bang
                 }
             }
-            Some('*') => Token::new(TokenType::Asterisk),
-            Some('/') => Token::new(TokenType::Slash),
-            Some('<') => Token::new(TokenType::Lt),
-            Some('>') => Token::new(TokenType::Gt),
-            None => Token::new(TokenType::Eof),
+            Some('*') => Token::Asterisk,
+            Some('/') => Token::Slash,
+            Some('<') => Token::Lt,
+            Some('>') => Token::Gt,
+            None => Token::Eof,
             Some(ch) => {
                 if ch.is_alphabetic() {
                     let ident = self.read_identifier();
                     return self.lookup_ident(ident);
-                } else if ch.is_digit(10) {
+                } else if ch.is_ascii_digit() {
                     let number = self.read_number();
-                    return Token::new(TokenType::Int(number));
+                    return Token::Int(number);
                 } else {
-                    Token::new(TokenType::Illegal(ch.into()))
+                    Token::Illegal(ch.into())
                 }
             }
         };
@@ -127,7 +127,7 @@ impl<'a> Lexer<'a> {
     fn read_number(&mut self) -> String {
         let mut number = String::new();
         while let Some(ch) = self.ch {
-            if ch.is_digit(10) {
+            if ch.is_ascii_digit() {
                 number.push(ch);
                 self.read_char();
             } else {
@@ -149,14 +149,14 @@ impl<'a> Lexer<'a> {
 
     fn lookup_ident(&self, ident: String) -> Token {
         match ident.as_str() {
-            "let" => Token::new(TokenType::Let),
-            "fn" => Token::new(TokenType::Function),
-            "true" => Token::new(TokenType::True),
-            "false" => Token::new(TokenType::False),
-            "if" => Token::new(TokenType::If),
-            "else" => Token::new(TokenType::Else),
-            "return" => Token::new(TokenType::Return),
-            _ => Token::new(TokenType::Ident(ident)),
+            "let" => Token::Let,
+            "fn" => Token::Function,
+            "true" => Token::True,
+            "false" => Token::False,
+            "if" => Token::If,
+            "else" => Token::Else,
+            "return" => Token::Return,
+            _ => Token::Ident(ident),
         }
     }
 }
@@ -164,11 +164,10 @@ impl<'a> Lexer<'a> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::token::TokenType;
 
     struct TestNextToken<'a> {
         // Expected token
-        exp_t: TokenType,
+        exp_t: Token,
         // Expected literal
         exp_l: &'a str,
     }
@@ -196,105 +195,87 @@ mod tests {
         10 != 5;
         "#;
         let tests = vec![
-            TestNextToken { exp_t: TokenType::Let, exp_l: "let" },
+            TestNextToken { exp_t: Token::Let, exp_l: "let" },
+            TestNextToken { exp_t: Token::Ident("five".into()), exp_l: "five" },
+            TestNextToken { exp_t: Token::Assign, exp_l: "=" },
+            TestNextToken { exp_t: Token::Int("5".into()), exp_l: "5" },
+            TestNextToken { exp_t: Token::Semicolon, exp_l: ";" },
+            TestNextToken { exp_t: Token::Let, exp_l: "let" },
+            TestNextToken { exp_t: Token::Ident("ten".into()), exp_l: "ten" },
+            TestNextToken { exp_t: Token::Assign, exp_l: "=" },
+            TestNextToken { exp_t: Token::Int("10".into()), exp_l: "10" },
+            TestNextToken { exp_t: Token::Semicolon, exp_l: ";" },
+            TestNextToken { exp_t: Token::Let, exp_l: "let" },
+            TestNextToken { exp_t: Token::Ident("add".into()), exp_l: "add" },
+            TestNextToken { exp_t: Token::Assign, exp_l: "=" },
+            TestNextToken { exp_t: Token::Function, exp_l: "fn" },
+            TestNextToken { exp_t: Token::Lparen, exp_l: "(" },
+            TestNextToken { exp_t: Token::Ident("x".into()), exp_l: "x" },
+            TestNextToken { exp_t: Token::Comma, exp_l: "," },
+            TestNextToken { exp_t: Token::Ident("y".into()), exp_l: "y" },
+            TestNextToken { exp_t: Token::Rparen, exp_l: ")" },
+            TestNextToken { exp_t: Token::Lbrace, exp_l: "{" },
+            TestNextToken { exp_t: Token::Ident("x".into()), exp_l: "x" },
+            TestNextToken { exp_t: Token::Plus, exp_l: "+" },
+            TestNextToken { exp_t: Token::Ident("y".into()), exp_l: "y" },
+            TestNextToken { exp_t: Token::Semicolon, exp_l: ";" },
+            TestNextToken { exp_t: Token::Rbrace, exp_l: "}" },
+            TestNextToken { exp_t: Token::Semicolon, exp_l: ";" },
+            TestNextToken { exp_t: Token::Let, exp_l: "let" },
             TestNextToken {
-                exp_t: TokenType::Ident("five".into()),
-                exp_l: "five",
-            },
-            TestNextToken { exp_t: TokenType::Assign, exp_l: "=" },
-            TestNextToken { exp_t: TokenType::Int("5".into()), exp_l: "5" },
-            TestNextToken { exp_t: TokenType::Semicolon, exp_l: ";" },
-            TestNextToken { exp_t: TokenType::Let, exp_l: "let" },
-            TestNextToken {
-                exp_t: TokenType::Ident("ten".into()),
-                exp_l: "ten",
-            },
-            TestNextToken { exp_t: TokenType::Assign, exp_l: "=" },
-            TestNextToken { exp_t: TokenType::Int("10".into()), exp_l: "10" },
-            TestNextToken { exp_t: TokenType::Semicolon, exp_l: ";" },
-            TestNextToken { exp_t: TokenType::Let, exp_l: "let" },
-            TestNextToken {
-                exp_t: TokenType::Ident("add".into()),
-                exp_l: "add",
-            },
-            TestNextToken { exp_t: TokenType::Assign, exp_l: "=" },
-            TestNextToken { exp_t: TokenType::Function, exp_l: "fn" },
-            TestNextToken { exp_t: TokenType::Lparen, exp_l: "(" },
-            TestNextToken { exp_t: TokenType::Ident("x".into()), exp_l: "x" },
-            TestNextToken { exp_t: TokenType::Comma, exp_l: "," },
-            TestNextToken { exp_t: TokenType::Ident("y".into()), exp_l: "y" },
-            TestNextToken { exp_t: TokenType::Rparen, exp_l: ")" },
-            TestNextToken { exp_t: TokenType::Lbrace, exp_l: "{" },
-            TestNextToken { exp_t: TokenType::Ident("x".into()), exp_l: "x" },
-            TestNextToken { exp_t: TokenType::Plus, exp_l: "+" },
-            TestNextToken { exp_t: TokenType::Ident("y".into()), exp_l: "y" },
-            TestNextToken { exp_t: TokenType::Semicolon, exp_l: ";" },
-            TestNextToken { exp_t: TokenType::Rbrace, exp_l: "}" },
-            TestNextToken { exp_t: TokenType::Semicolon, exp_l: ";" },
-            TestNextToken { exp_t: TokenType::Let, exp_l: "let" },
-            TestNextToken {
-                exp_t: TokenType::Ident("result".into()),
+                exp_t: Token::Ident("result".into()),
                 exp_l: "result",
             },
-            TestNextToken { exp_t: TokenType::Assign, exp_l: "=" },
-            TestNextToken {
-                exp_t: TokenType::Ident("add".into()),
-                exp_l: "add",
-            },
-            TestNextToken { exp_t: TokenType::Lparen, exp_l: "(" },
-            TestNextToken {
-                exp_t: TokenType::Ident("five".into()),
-                exp_l: "five",
-            },
-            TestNextToken { exp_t: TokenType::Comma, exp_l: "," },
-            TestNextToken {
-                exp_t: TokenType::Ident("ten".into()),
-                exp_l: "ten",
-            },
-            TestNextToken { exp_t: TokenType::Rparen, exp_l: ")" },
-            TestNextToken { exp_t: TokenType::Semicolon, exp_l: ";" },
+            TestNextToken { exp_t: Token::Assign, exp_l: "=" },
+            TestNextToken { exp_t: Token::Ident("add".into()), exp_l: "add" },
+            TestNextToken { exp_t: Token::Lparen, exp_l: "(" },
+            TestNextToken { exp_t: Token::Ident("five".into()), exp_l: "five" },
+            TestNextToken { exp_t: Token::Comma, exp_l: "," },
+            TestNextToken { exp_t: Token::Ident("ten".into()), exp_l: "ten" },
+            TestNextToken { exp_t: Token::Rparen, exp_l: ")" },
+            TestNextToken { exp_t: Token::Semicolon, exp_l: ";" },
             // operators
-            TestNextToken { exp_t: TokenType::Bang, exp_l: "!" },
-            TestNextToken { exp_t: TokenType::Minus, exp_l: "-" },
-            TestNextToken { exp_t: TokenType::Slash, exp_l: "/" },
-            TestNextToken { exp_t: TokenType::Asterisk, exp_l: "*" },
-            TestNextToken { exp_t: TokenType::Int("5".into()), exp_l: "5" },
-            TestNextToken { exp_t: TokenType::Semicolon, exp_l: ";" },
-            TestNextToken { exp_t: TokenType::Int("5".into()), exp_l: "5" },
-            TestNextToken { exp_t: TokenType::Lt, exp_l: "<" },
-            TestNextToken { exp_t: TokenType::Int("10".into()), exp_l: "10" },
-            TestNextToken { exp_t: TokenType::Gt, exp_l: ">" },
-            TestNextToken { exp_t: TokenType::Int("5".into()), exp_l: "5" },
-            TestNextToken { exp_t: TokenType::Semicolon, exp_l: ";" },
+            TestNextToken { exp_t: Token::Bang, exp_l: "!" },
+            TestNextToken { exp_t: Token::Minus, exp_l: "-" },
+            TestNextToken { exp_t: Token::Slash, exp_l: "/" },
+            TestNextToken { exp_t: Token::Asterisk, exp_l: "*" },
+            TestNextToken { exp_t: Token::Int("5".into()), exp_l: "5" },
+            TestNextToken { exp_t: Token::Semicolon, exp_l: ";" },
+            TestNextToken { exp_t: Token::Int("5".into()), exp_l: "5" },
+            TestNextToken { exp_t: Token::Lt, exp_l: "<" },
+            TestNextToken { exp_t: Token::Int("10".into()), exp_l: "10" },
+            TestNextToken { exp_t: Token::Gt, exp_l: ">" },
+            TestNextToken { exp_t: Token::Int("5".into()), exp_l: "5" },
+            TestNextToken { exp_t: Token::Semicolon, exp_l: ";" },
             // if ...
-            TestNextToken { exp_t: TokenType::If, exp_l: "if" },
-            TestNextToken { exp_t: TokenType::Lparen, exp_l: "(" },
-            TestNextToken { exp_t: TokenType::Int("5".into()), exp_l: "5" },
-            TestNextToken { exp_t: TokenType::Lt, exp_l: "<" },
-            TestNextToken { exp_t: TokenType::Int("10".into()), exp_l: "10" },
-            TestNextToken { exp_t: TokenType::Rparen, exp_l: ")" },
-            TestNextToken { exp_t: TokenType::Lbrace, exp_l: "{" },
-            TestNextToken { exp_t: TokenType::Return, exp_l: "return" },
-            TestNextToken { exp_t: TokenType::True, exp_l: "true" },
-            TestNextToken { exp_t: TokenType::Semicolon, exp_l: ";" },
-            TestNextToken { exp_t: TokenType::Rbrace, exp_l: "}" },
-            TestNextToken { exp_t: TokenType::Else, exp_l: "else" },
-            TestNextToken { exp_t: TokenType::Lbrace, exp_l: "{" },
-            TestNextToken { exp_t: TokenType::Return, exp_l: "return" },
-            TestNextToken { exp_t: TokenType::False, exp_l: "false" },
-            TestNextToken { exp_t: TokenType::Semicolon, exp_l: ";" },
-            TestNextToken { exp_t: TokenType::Rbrace, exp_l: "}" },
+            TestNextToken { exp_t: Token::If, exp_l: "if" },
+            TestNextToken { exp_t: Token::Lparen, exp_l: "(" },
+            TestNextToken { exp_t: Token::Int("5".into()), exp_l: "5" },
+            TestNextToken { exp_t: Token::Lt, exp_l: "<" },
+            TestNextToken { exp_t: Token::Int("10".into()), exp_l: "10" },
+            TestNextToken { exp_t: Token::Rparen, exp_l: ")" },
+            TestNextToken { exp_t: Token::Lbrace, exp_l: "{" },
+            TestNextToken { exp_t: Token::Return, exp_l: "return" },
+            TestNextToken { exp_t: Token::True, exp_l: "true" },
+            TestNextToken { exp_t: Token::Semicolon, exp_l: ";" },
+            TestNextToken { exp_t: Token::Rbrace, exp_l: "}" },
+            TestNextToken { exp_t: Token::Else, exp_l: "else" },
+            TestNextToken { exp_t: Token::Lbrace, exp_l: "{" },
+            TestNextToken { exp_t: Token::Return, exp_l: "return" },
+            TestNextToken { exp_t: Token::False, exp_l: "false" },
+            TestNextToken { exp_t: Token::Semicolon, exp_l: ";" },
+            TestNextToken { exp_t: Token::Rbrace, exp_l: "}" },
             // statements
-            TestNextToken { exp_t: TokenType::Int("10".into()), exp_l: "10" },
-            TestNextToken { exp_t: TokenType::Eq, exp_l: "==" },
-            TestNextToken { exp_t: TokenType::Int("10".into()), exp_l: "10" },
-            TestNextToken { exp_t: TokenType::Semicolon, exp_l: ";" },
-            TestNextToken { exp_t: TokenType::Int("10".into()), exp_l: "10" },
-            TestNextToken { exp_t: TokenType::NotEq, exp_l: "!=" },
-            TestNextToken { exp_t: TokenType::Int("5".into()), exp_l: "5" },
-            TestNextToken { exp_t: TokenType::Semicolon, exp_l: ";" },
+            TestNextToken { exp_t: Token::Int("10".into()), exp_l: "10" },
+            TestNextToken { exp_t: Token::Eq, exp_l: "==" },
+            TestNextToken { exp_t: Token::Int("10".into()), exp_l: "10" },
+            TestNextToken { exp_t: Token::Semicolon, exp_l: ";" },
+            TestNextToken { exp_t: Token::Int("10".into()), exp_l: "10" },
+            TestNextToken { exp_t: Token::NotEq, exp_l: "!=" },
+            TestNextToken { exp_t: Token::Int("5".into()), exp_l: "5" },
+            TestNextToken { exp_t: Token::Semicolon, exp_l: ";" },
             // eof
-            TestNextToken { exp_t: TokenType::Eof, exp_l: "" },
+            TestNextToken { exp_t: Token::Eof, exp_l: "" },
         ];
 
         let mut lexer = Lexer::new(input);
@@ -302,12 +283,9 @@ mod tests {
         for (i, tt) in tests.iter().enumerate() {
             let token = lexer.next_token();
             assert_eq!(
-                token.tp(),
-                &tt.exp_t,
+                token, tt.exp_t,
                 "tests[{}] - token type wrong. expected={}, got={}",
-                i,
-                tt.exp_t,
-                token.tp()
+                i, tt.exp_t, token
             );
             assert_eq!(
                 token.literal(),

@@ -14,32 +14,31 @@
 
 use std::fmt;
 
-#[derive(Debug)]
-pub(crate) struct Token {
-    tp: TokenType,
-    // literal: &'a str
-}
+pub const EOF: Token = Token::Eof;
 
-impl Token {
-    // pub fn new(tp: TokenType, literal: &'a str) -> Self {
-    //     Self {tp, literal}
-    // }
+// #[derive(Debug)]
+// pub(crate) struct Token {
+//     tp: TokenType,
+//     // literal: &'a str
+// }
 
-    pub fn new(tp: TokenType) -> Self {
-        Self { tp }
-    }
+// impl Token {
+//     // pub fn new(tp: TokenType, literal: &'a str) -> Self {
+//     //     Self {tp, literal}
+//     // }
 
-    pub fn tp(&self) -> &TokenType {
-        &self.tp
-    }
+//     pub fn new(tp: TokenType) -> Self {
+//         Self { tp }
+//     }
 
-    pub fn literal(&self) -> &str {
-        self.tp.as_str()
-    }
-}
+//     pub fn tp(&self) -> &TokenType {
+//         &self.tp
+//     }
+
+// }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub(crate) enum TokenType {
+pub(crate) enum Token {
     Illegal(String),
     Eof,
 
@@ -77,41 +76,45 @@ pub(crate) enum TokenType {
     NotEq,
 }
 
-impl TokenType {
+impl Token {
+    pub fn literal(&self) -> &str {
+        self.as_str()
+    }
+
     pub(crate) fn as_str(&self) -> &str {
         match self {
-            TokenType::Illegal(s) => s.as_str(),
-            TokenType::Eof => "",
-            TokenType::Ident(s) => s.as_str(),
-            TokenType::Int(s) => s.as_str(),
-            TokenType::Assign => "=",
-            TokenType::Plus => "+",
-            TokenType::Minus => "-",
-            TokenType::Bang => "!",
-            TokenType::Asterisk => "*",
-            TokenType::Slash => "/",
-            TokenType::Lt => "<",
-            TokenType::Gt => ">",
-            TokenType::Comma => ",",
-            TokenType::Semicolon => ";",
-            TokenType::Lparen => "(",
-            TokenType::Rparen => ")",
-            TokenType::Lbrace => "{",
-            TokenType::Rbrace => "}",
-            TokenType::Function => "fn",
-            TokenType::Let => "let",
-            TokenType::True => "true",
-            TokenType::False => "false",
-            TokenType::If => "if",
-            TokenType::Else => "else",
-            TokenType::Return => "return",
-            TokenType::Eq => "==",
-            TokenType::NotEq => "!=",
+            Self::Illegal(s) => s.as_str(),
+            Self::Eof => "",
+            Self::Ident(s) => s.as_str(),
+            Self::Int(s) => s.as_str(),
+            Self::Assign => "=",
+            Self::Plus => "+",
+            Self::Minus => "-",
+            Self::Bang => "!",
+            Self::Asterisk => "*",
+            Self::Slash => "/",
+            Self::Lt => "<",
+            Self::Gt => ">",
+            Self::Comma => ",",
+            Self::Semicolon => ";",
+            Self::Lparen => "(",
+            Self::Rparen => ")",
+            Self::Lbrace => "{",
+            Self::Rbrace => "}",
+            Self::Function => "fn",
+            Self::Let => "let",
+            Self::True => "true",
+            Self::False => "false",
+            Self::If => "if",
+            Self::Else => "else",
+            Self::Return => "return",
+            Self::Eq => "==",
+            Self::NotEq => "!=",
         }
     }
 }
 
-impl fmt::Display for TokenType {
+impl fmt::Display for Token {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Illegal(s) => write!(f, "illegal({s})"),
