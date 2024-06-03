@@ -23,13 +23,14 @@ use lexer::Lexer;
 use token::EOF;
 
 const PROMPT: &[u8] = b">> ";
+const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 pub fn start<R: Read, W: Write>(r: R, w: W) -> io::Result<()> {
     let mut reader = BufReader::new(r);
     let mut writer = BufWriter::new(w);
     let mut line = String::new();
 
-    writer.write_all(b"Welcome to An v0.1.0\n")?;
+    writeln!(writer, "Welcome to An v{VERSION}\n")?;
 
     loop {
         writer.write_all(PROMPT)?;
