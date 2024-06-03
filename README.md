@@ -1,4 +1,4 @@
-# AnLang
+# An Lang
 
 ![logo](assets/logo.png "logo")
 
@@ -6,6 +6,6 @@
 
 ## License
 
-AnLang is distributed under the terms of the ISC license.
+An Lang is distributed under the terms of the ISC license.
 
 See [LICENSE](LICENSE)
