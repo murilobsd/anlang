@@ -14,7 +14,7 @@
 
 pub const EOF: Token = Token::Eof;
 
-#[derive(Clone, PartialEq, Eq)]
+#[derive(PartialEq, Eq)]
 pub(crate) enum Token {
     Assign,
     Asterisk,
