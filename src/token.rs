@@ -14,7 +14,7 @@
 
 pub const EOF: Token = Token::Eof;
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Clone, PartialEq, Eq)]
 pub(crate) enum Token {
     Assign,
     Asterisk,
@@ -82,5 +82,147 @@ impl Token {
 impl std::fmt::Display for Token {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.literal())
+    }
+}
+
+impl std::fmt::Debug for Token {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Assign => f
+                .debug_struct("Token")
+                .field("type", &"assign")
+                .field("literal", &self.literal())
+                .finish(),
+            Self::Asterisk => f
+                .debug_struct("Token")
+                .field("type", &"asterisk")
+                .field("literal", &self.literal())
+                .finish(),
+            Self::Bang => f
+                .debug_struct("Token")
+                .field("type", &"bang")
+                .field("literal", &self.literal())
+                .finish(),
+            Self::Comma => f
+                .debug_struct("Token")
+                .field("type", &"comma")
+                .field("literal", &self.literal())
+                .finish(),
+            Self::Else => f
+                .debug_struct("Token")
+                .field("type", &"else")
+                .field("literal", &self.literal())
+                .finish(),
+            Self::Eof => f
+                .debug_struct("Token")
+                .field("type", &"eof")
+                .field("literal", &self.literal())
+                .finish(),
+            Self::Eq => f
+                .debug_struct("Token")
+                .field("type", &"eq")
+                .field("literal", &self.literal())
+                .finish(),
+            Self::False => f
+                .debug_struct("Token")
+                .field("type", &"false")
+                .field("literal", &self.literal())
+                .finish(),
+            Self::Function => f
+                .debug_struct("Token")
+                .field("type", &"function")
+                .field("literal", &self.literal())
+                .finish(),
+            Self::Gt => f
+                .debug_struct("Token")
+                .field("type", &"gt")
+                .field("literal", &self.literal())
+                .finish(),
+            Self::Ident(_) => f
+                .debug_struct("Token")
+                .field("type", &"ident")
+                .field("literal", &self.literal())
+                .finish(),
+            Self::If => f
+                .debug_struct("Token")
+                .field("type", &"if")
+                .field("literal", &self.literal())
+                .finish(),
+            Self::Illegal(_) => f
+                .debug_struct("Token")
+                .field("type", &"illegal")
+                .field("literal", &self.literal())
+                .finish(),
+            Self::Int(_) => f
+                .debug_struct("Token")
+                .field("type", &"int")
+                .field("literal", &self.literal())
+                .finish(),
+            Self::Lbrace => f
+                .debug_struct("Token")
+                .field("type", &"lbrace")
+                .field("literal", &self.literal())
+                .finish(),
+            Self::Let => f
+                .debug_struct("Token")
+                .field("type", &"let")
+                .field("literal", &self.literal())
+                .finish(),
+            Self::Lparen => f
+                .debug_struct("Token")
+                .field("type", &"lparen")
+                .field("literal", &self.literal())
+                .finish(),
+            Self::Lt => f
+                .debug_struct("Token")
+                .field("type", &"lt")
+                .field("literal", &self.literal())
+                .finish(),
+            Self::Minus => f
+                .debug_struct("Token")
+                .field("type", &"minus")
+                .field("literal", &self.literal())
+                .finish(),
+            Self::NotEq => f
+                .debug_struct("Token")
+                .field("type", &"noteq")
+                .field("literal", &self.literal())
+                .finish(),
+            Self::Plus => f
+                .debug_struct("Token")
+                .field("type", &"plus")
+                .field("literal", &self.literal())
+                .finish(),
+            Self::Rbrace => f
+                .debug_struct("Token")
+                .field("type", &"rbrace")
+                .field("literal", &self.literal())
+                .finish(),
+            Self::Return => f
+                .debug_struct("Token")
+                .field("type", &"return")
+                .field("literal", &self.literal())
+                .finish(),
+            Self::Rparen => f
+                .debug_struct("Token")
+                .field("type", &"rparen")
+                .field("literal", &self.literal())
+                .finish(),
+            Self::Semicolon => f
+                .debug_struct("Token")
+                .field("type", &"semicolon")
+                .field("literal", &self.literal())
+                .finish(),
+            Self::Slash => f
+                .debug_struct("Token")
+                .field("type", &"slash")
+                .field("literal", &self.literal())
+                .finish(),
+            Self::True => f
+                .debug_struct("Token")
+                .field("type", &"true")
+                .field("literal", &self.literal())
+                .finish(),
+        }
     }
 }

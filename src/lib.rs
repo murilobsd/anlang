@@ -40,7 +40,7 @@ pub fn start<R: Read, W: Write>(r: R, w: W) -> io::Result<()> {
             loop {
                 let token = lex.next_token();
                 if token != EOF {
-                    writeln!(writer, "{}", token)?;
+                    writeln!(writer, "{:?}", token)?;
                 } else {
                     break;
                 }
