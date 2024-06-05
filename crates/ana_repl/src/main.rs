@@ -15,6 +15,12 @@
 use std::io::{self, stdin, stdout};
 
 fn main() -> io::Result<()> {
-    ana_repl::start(stdin(), stdout())?;
+    let args: Vec<String> = std::env::args().collect();
+    if args.len() == 1 {
+        ana_repl::start(stdin(), stdout())?;
+    } else {
+        let file = std::fs::File::open("/home/msi/src/anlang/tokens.ana")?;
+        ana_repl::start_file(file, stdout())?;
+    }
     Ok(())
 }

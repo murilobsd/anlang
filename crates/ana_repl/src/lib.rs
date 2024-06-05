@@ -25,7 +25,7 @@ pub fn start<R: Read, W: Write>(r: R, w: W) -> io::Result<()> {
     let mut writer = BufWriter::new(w);
     let mut line = String::new();
 
-    writeln!(writer, "Welcome to An v{VERSION}\n")?;
+    writeln!(writer, "Welcome to Ana v{VERSION}\n")?;
 
     loop {
         writer.write_all(PROMPT)?;
@@ -45,4 +45,28 @@ pub fn start<R: Read, W: Write>(r: R, w: W) -> io::Result<()> {
         }
         line.clear();
     }
+}
+
+pub fn start_file<R: Read, W: Write>(r: R, w: W) -> io::Result<()> {
+    let reader = BufReader::new(r);
+    let mut writer = BufWriter::new(w);
+
+    for line in reader.lines() {
+        let line = line?;
+        if !line.trim().is_empty() {
+            writeln!(writer, "LINE ==> {line}")?;
+            let mut lex = Lexer::new(&line);
+            loop {
+                let token = lex.next_token();
+                if token != EOF {
+                    writeln!(writer, "{:?}", token)?;
+                } else {
+                    break;
+                }
+            }
+            writer.flush()?;
+        }
+    }
+
+    Ok(())
 }
