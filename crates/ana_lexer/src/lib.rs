@@ -12,24 +12,24 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-use std::io::{Cursor, Read};
+use std::iter::Peekable;
+use std::str::Chars;
 
 use ana_token::Token;
 
 #[derive(Debug)]
 pub struct Lexer<'a> {
     /// Source code input
-    input: Cursor<&'a [u8]>,
-    /// Current char under examination
-    ch: Option<char>,
+    input: Peekable<Chars<'a>>,
 }
 
 impl<'a> Lexer<'a> {
-    fn read_identifier(&mut self) -> String {
+    fn read_identifier(&mut self, start_char: char) -> String {
         let mut ident = String::new();
-        while let Some(ch) = self.ch {
+        ident.push(start_char);
+        while let Some(ch) = self.peek_char() {
             if ch.is_alphabetic() {
-                ident.push(ch);
+                ident.push(*ch);
                 self.read_char();
             } else {
                 break;
@@ -42,7 +42,7 @@ impl<'a> Lexer<'a> {
     pub fn next_token(&mut self) -> Token {
         self.skip_whitespace();
 
-        let token = match self.ch {
+        let token = match self.read_char() {
             Some('(') => Token::Lparen,
             Some(')') => Token::Rparen,
             Some('+') => Token::Plus,
@@ -50,7 +50,7 @@ impl<'a> Lexer<'a> {
             Some(';') => Token::Semicolon,
             Some('=') => {
                 if let Some(ch) = self.peek_char() {
-                    if ch == '=' {
+                    if *ch == '=' {
                         self.read_char();
                         Token::Eq
                     } else {
@@ -65,7 +65,7 @@ impl<'a> Lexer<'a> {
             Some('-') => Token::Minus,
             Some('!') => {
                 if let Some(ch) = self.peek_char() {
-                    if ch == '=' {
+                    if *ch == '=' {
                         self.read_char();
                         Token::NotEq
                     } else {
@@ -82,10 +82,10 @@ impl<'a> Lexer<'a> {
             None => Token::Eof,
             Some(ch) => {
                 if ch.is_alphabetic() {
-                    let ident = self.read_identifier();
+                    let ident = self.read_identifier(ch);
                     return self.lookup_ident(ident);
                 } else if ch.is_ascii_digit() {
-                    let number = self.read_number();
+                    let number = self.read_number(ch);
                     return Token::Int(number);
                 } else {
                     Token::Illegal(ch.into())
@@ -93,42 +93,29 @@ impl<'a> Lexer<'a> {
             }
         };
 
-        self.read_char();
         token
     }
 
-    fn peek_char(&mut self) -> Option<char> {
-        let current_position = self.input.position();
-        let mut buffer = [0; 1];
-        let n = self.input.read(&mut buffer).unwrap_or(0);
-        self.input.set_position(current_position);
-        if n == 0 {
-            None
-        } else {
-            Some(buffer[0] as char)
-        }
+    fn peek_char(&mut self) -> Option<&char> {
+        self.input.peek()
     }
 
     /// Create a new lexer with the given input
     pub fn new(input: &'a str) -> Self {
-        let mut lexer =
-            Lexer { input: Cursor::new(input.as_bytes()), ch: None };
-        lexer.read_char();
-        lexer
+        Lexer { input: input.chars().peekable() }
     }
 
     /// Read the next character and advance the positions
-    fn read_char(&mut self) {
-        let mut buffer = [0; 1];
-        let n = self.input.read(&mut buffer).unwrap_or(0);
-        self.ch = if n == 0 { None } else { Some(buffer[0] as char) }
+    fn read_char(&mut self) -> Option<char> {
+        self.input.next()
     }
 
-    fn read_number(&mut self) -> String {
+    fn read_number(&mut self, start_char: char) -> String {
         let mut number = String::new();
-        while let Some(ch) = self.ch {
+        number.push(start_char);
+        while let Some(ch) = self.peek_char() {
             if ch.is_ascii_digit() {
-                number.push(ch);
+                number.push(*ch);
                 self.read_char();
             } else {
                 break;
@@ -138,7 +125,7 @@ impl<'a> Lexer<'a> {
     }
 
     fn skip_whitespace(&mut self) {
-        while let Some(ch) = self.ch {
+        while let Some(ch) = self.peek_char() {
             if ch.is_whitespace() {
                 self.read_char();
             } else {
@@ -149,13 +136,13 @@ impl<'a> Lexer<'a> {
 
     fn lookup_ident(&self, ident: String) -> Token {
         match ident.as_str() {
-            "let" => Token::Let,
-            "fn" => Token::Function,
-            "true" => Token::True,
-            "false" => Token::False,
-            "if" => Token::If,
             "else" => Token::Else,
+            "false" => Token::False,
+            "fn" => Token::Function,
+            "if" => Token::If,
+            "let" => Token::Let,
             "return" => Token::Return,
+            "true" => Token::True,
             _ => Token::Ident(ident),
         }
     }
