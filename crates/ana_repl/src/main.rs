@@ -15,6 +15,6 @@
 use std::io::{self, stdin, stdout};
 
 fn main() -> io::Result<()> {
-    anlang::start(stdin(), stdout())?;
+    ana_repl::start(stdin(), stdout())?;
     Ok(())
 }

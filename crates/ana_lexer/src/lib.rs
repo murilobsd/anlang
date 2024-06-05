@@ -14,10 +14,10 @@
 
 use std::io::{Cursor, Read};
 
-use crate::token::Token;
+use ana_token::Token;
 
 #[derive(Debug)]
-pub(crate) struct Lexer<'a> {
+pub struct Lexer<'a> {
     /// Source code input
     input: Cursor<&'a [u8]>,
     /// Current char under examination

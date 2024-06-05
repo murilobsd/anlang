@@ -3,5 +3,20 @@
 version = 3
 
 [[package]]
-name = "anlang"
+name = "ana_lexer"
+version = "0.1.0"
+dependencies = [
+ "ana_token",
+]
+
+[[package]]
+name = "ana_repl"
+version = "0.1.0"
+dependencies = [
+ "ana_lexer",
+ "ana_token",
+]
+
+[[package]]
+name = "ana_token"
 version = "0.1.0"

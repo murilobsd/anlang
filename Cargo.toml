@@ -1,23 +1,28 @@
-[package]
+[workspace]
+resolver = "2"
+members = ["crates/*"]
+
+[workspace.package]
 authors      = ["Murilo Ijanc' <mbsd@m0x.ru>"]
 description  = "A study of language"
 edition      = "2021"
 homepage     = "https://m0x.ru"
 license      = "MIT"
-name         = "anlang"
 repository   = "https://git.sr.ht/~mbsd/anos"
 rust-version = "1.78"
 version      = "0.1.0"
 
-[lints.clippy]
+[workspace.lints.clippy]
 all        = { level = "warn" }
 
-[[bin]]
-name = "an"
-path = "src/main.rs"
-test = false
+[workspace.dependencies]
+ana_token = { version = "0.1.0", path = "crates/ana_token" }
+ana_lexer = { version = "0.1.0", path = "crates/ana_lexer" }
 
-[dependencies]
+[profile.dev]
+# Disabling debug info speeds up local and CI builds,
+# and we don't rely on it for debugging that much.
+debug = false
 
 [profile.release]
 # Configurations explicitly listed here for clarity.

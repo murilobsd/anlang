@@ -1,4 +1,3 @@
-#![allow(dead_code)]
 // Copyright (c) 2024 Murilo Ijanc' <mbsd@m0x.ru>
 //
 // Permission to use, copy, modify, and distribute this software for any
@@ -15,12 +14,8 @@
 
 use std::io::{self, prelude::*, BufReader, BufWriter, Read, Write};
 
-mod ast;
-mod lexer;
-mod token;
-
-use lexer::Lexer;
-use token::EOF;
+use ana_lexer::Lexer;
+use ana_token::EOF;
 
 const PROMPT: &[u8] = b">> ";
 const VERSION: &str = env!("CARGO_PKG_VERSION");
@@ -51,3 +46,4 @@ pub fn start<R: Read, W: Write>(r: R, w: W) -> io::Result<()> {
         line.clear();
     }
 }
+

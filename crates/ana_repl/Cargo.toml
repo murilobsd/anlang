@@ -1,0 +1,25 @@
+[package]
+name = "ana_repl"
+authors.workspace = true
+description.workspace = true
+edition.workspace = true
+homepage.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+
+[dependencies]
+ana_token = { workspace = true }
+ana_lexer = { workspace = true }
+
+[[bin]]
+name = "an"
+path = "src/main.rs"
+test = false
+
+[lib]
+doctest = false
+
+[lints]
+workspace = true
