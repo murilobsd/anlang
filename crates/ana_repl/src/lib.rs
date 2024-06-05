@@ -25,7 +25,7 @@ pub fn start<R: Read, W: Write>(r: R, w: W) -> io::Result<()> {
     let mut writer = BufWriter::new(w);
     let mut line = String::new();
 
-    writeln!(writer, "Welcome to Ana v{VERSION}\n")?;
+    writeln!(writer, "Welcome to Ana v{VERSION}")?;
 
     loop {
         writer.write_all(PROMPT)?;
