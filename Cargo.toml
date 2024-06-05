@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["crates/*"]
+members  = ["crates/*"]
 
 [workspace.package]
 authors      = ["Murilo Ijanc' <mbsd@m0x.ru>"]
@@ -13,7 +13,7 @@ rust-version = "1.78"
 version      = "0.1.0"
 
 [workspace.lints.clippy]
-all        = { level = "warn" }
+all = { level = "warn" }
 
 [workspace.dependencies]
 ana_token = { version = "0.1.0", path = "crates/ana_token" }

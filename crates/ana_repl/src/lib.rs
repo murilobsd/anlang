@@ -46,4 +46,3 @@ pub fn start<R: Read, W: Write>(r: R, w: W) -> io::Result<()> {
         line.clear();
     }
 }
-
