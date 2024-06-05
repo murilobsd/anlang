@@ -14,7 +14,7 @@ ana_token = { workspace = true }
 ana_lexer = { workspace = true }
 
 [[bin]]
-name = "an"
+name = "ana"
 path = "src/main.rs"
 test = false
 
