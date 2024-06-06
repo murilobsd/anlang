@@ -20,7 +20,7 @@ use ana_token::EOF;
 const PROMPT: &[u8] = b">> ";
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 
-pub fn start<R: Read, W: Write>(r: R, w: W) -> io::Result<()> {
+pub fn repl_start<R: Read, W: Write>(r: R, w: W) -> io::Result<()> {
     let mut reader = BufReader::new(r);
     let mut writer = BufWriter::new(w);
     let mut line = String::new();
@@ -47,7 +47,7 @@ pub fn start<R: Read, W: Write>(r: R, w: W) -> io::Result<()> {
     }
 }
 
-pub fn start_file<R: Read, W: Write>(r: R, w: W) -> io::Result<()> {
+pub fn repl_start_file<R: Read, W: Write>(r: R, w: W) -> io::Result<()> {
     let reader = BufReader::new(r);
     let mut writer = BufWriter::new(w);
 

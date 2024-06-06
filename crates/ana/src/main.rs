@@ -12,15 +12,17 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-use std::io::{self, stdin, stdout};
+use std::{env, io, fs};
 
 fn main() -> io::Result<()> {
-    let args: Vec<String> = std::env::args().collect();
+    let args: Vec<String> = env::args().collect();
+
     if args.len() == 1 {
-        ana_repl::start(stdin(), stdout())?;
+        ana::repl_start(io::stdin(), io::stdout())?;
     } else {
-        let file = std::fs::File::open("/home/msi/src/anlang/tokens.ana")?;
-        ana_repl::start_file(file, stdout())?;
+        let file = fs::File::open(&args[1])?;
+        ana::repl_start_file(file, io::stdout())?;
     }
+
     Ok(())
 }

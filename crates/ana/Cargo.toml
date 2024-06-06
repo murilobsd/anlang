@@ -1,5 +1,5 @@
 [package]
-name                   = "ana_repl"
+name                   = "ana"
 authors.workspace      = true
 description.workspace  = true
 edition.workspace      = true
@@ -12,11 +12,6 @@ version.workspace      = true
 [dependencies]
 ana_token = { workspace = true }
 ana_lexer = { workspace = true }
-
-[[bin]]
-name = "ana"
-path = "src/main.rs"
-test = false
 
 [lib]
 doctest = false

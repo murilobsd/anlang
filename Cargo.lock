@@ -3,17 +3,17 @@
 version = 3
 
 [[package]]
-name = "ana_lexer"
+name = "ana"
 version = "0.1.0"
 dependencies = [
+ "ana_lexer",
  "ana_token",
 ]
 
 [[package]]
-name = "ana_repl"
+name = "ana_lexer"
 version = "0.1.0"
 dependencies = [
- "ana_lexer",
  "ana_token",
 ]
 
