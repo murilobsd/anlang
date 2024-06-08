@@ -12,7 +12,7 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-use std::{env, io, fs};
+use std::{env, fs, io};
 
 fn main() -> io::Result<()> {
     let args: Vec<String> = env::args().collect();
