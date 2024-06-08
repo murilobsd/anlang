@@ -1,33 +1,10 @@
-# Ana Lang
+# Ana Programming Language
 
 ![logo](assets/logo.png "logo")
 
-> The name of the project is based on the prefix of my wife personal name. [WIP]
+> WARNING: THIS IS A WORK IN PROGRESS, IT DOES NOT WORK, DO NOT BOTHER BUILDING.
 
-Sample syntax:
-
-```
-let five = 5;
-let ten = 10;
-
-let add = fn(x, y) {
-    x + y;
-};
-
-let result = add(five, ten);
-!-/*5;
-5 < 10 > 5;
-
-if (5 < 10) {
-    return true;
-} else {
-    return false;
-}
-
-10 == 10;
-10 != 5;
-
-```
+## Overview
 
 ## License
 
