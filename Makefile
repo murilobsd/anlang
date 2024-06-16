@@ -1,3 +1,5 @@
+.PHONY: fmt clippy build
+
 all: test build
 
 fmt:
